@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Tableau de bord</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle">Tableau de bord</th:block>
+
+<div layout:fragment="content">
+
+  <div class="stat-grid">
+    <div class="stat-tile">
+      <div class="stat-tile-label">Produits</div>
+      <div class="stat-tile-value" th:text="${stats.totalProducts()}">0</div>
+    </div>
+    <div class="stat-tile accent">
+      <div class="stat-tile-label">Categories</div>
+      <div class="stat-tile-value" th:text="${stats.totalCategories()}">0</div>
+    </div>
+    <div class="stat-tile danger">
+      <div class="stat-tile-label">Ruptures de stock</div>
+      <div class="stat-tile-value" th:text="${stats.outOfStockCount()}">0</div>
+    </div>
+    <div class="stat-tile warning">
+      <div class="stat-tile-label">Stock faible</div>
+      <div class="stat-tile-value" th:text="${stats.lowStockCount()}">0</div>
+    </div>
+  </div>
+
+  <div class="card" style="max-width: 360px;">
+    <div class="card-title">Valeur estimee du stock</div>
+    <div class="stat-tile-value">
+      <span th:text="${#numbers.formatDecimal(stats.estimatedStockValue(), 0, 'COMMA', 0, 'POINT')}">0</span>
+      &nbsp;FCFA
+    </div>
+    <p style="color: var(--color-text-muted); font-size: 12px; margin-top: 6px;">
+      Calculee sur la base du prix d'achat des produits actifs.
+    </p>
+  </div>
+
+  <div class="card" th:if="${stats.outOfStockCount() + stats.lowStockCount() > 0}">
+    <div class="card-title"><i class="fa fa-exclamation-triangle" style="color: var(--color-warning);"></i>&nbsp;Produits a reapprovisionner</div>
+    <p style="margin: 0;">
+      <span th:text="${stats.outOfStockCount() + stats.lowStockCount()}">0</span>
+      produit(s) necessitent une attention :
+      <a th:href="@{/products(status='RUPTURE')}">voir les ruptures</a>
+      &middot;
+      <a th:href="@{/products(status='STOCK_FAIBLE')}">voir le stock faible</a>
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
