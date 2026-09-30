@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Utilisateurs</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle">Utilisateurs</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2 th:text="${users.totalElements} + ' utilisateur(s)'">0 utilisateur(s)</h2>
+    <a th:href="@{/users/new}" class="btn btn-accent"><i class="fa fa-plus"></i>&nbsp;Nouvel utilisateur</a>
+  </div>
+
+  <div class="card">
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>Nom d'utilisateur</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user : ${users.content}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role}"></td>
+        <td>
+          <span class="badge-status" th:classappend="${user.active} ? 'disponible' : 'inactive'"
+                th:text="${user.active} ? 'Actif' : 'Inactif'"></span>
+        </td>
+        <td class="table-actions">
+          <a th:href="@{/users/{id}/edit(id=${user.id})}" title="Modifier"><i class="fa fa-pencil"></i></a>
+        </td>
+      </tr>
+      <tr th:if="${users.empty}">
+        <td colspan="5" class="table-empty">Aucun utilisateur pour le moment.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ul class="pagination" th:if="${users.totalPages > 1}">
+    <li th:classappend="${users.first} ? 'disabled'">
+      <a th:href="@{/users(page=${users.number - 1})}">&laquo;</a>
+    </li>
+    <li th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}"
+        th:classappend="${i == users.number} ? 'active'">
+      <a th:href="@{/users(page=${i})}" th:text="${i + 1}"></a>
+    </li>
+    <li th:classappend="${users.last} ? 'disabled'">
+      <a th:href="@{/users(page=${users.number + 1})}">&raquo;</a>
+    </li>
+  </ul>
+
+</div>
+</body>
+</html>
