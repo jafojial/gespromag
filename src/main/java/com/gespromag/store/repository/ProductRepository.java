@@ -40,8 +40,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
               and (:search is null or lower(p.name) like lower(concat('%', :search, '%'))
                                     or lower(p.sku) like lower(concat('%', :search, '%')))
               and (:categoryId is null or p.category.id = :categoryId)
+              and (
+                :status is null
+                or (:status = 'RUPTURE' and p.quantity = 0)
+                or (:status = 'STOCK_FAIBLE' and p.quantity > 0 and p.quantity <= p.minimumQuantity)
+                or (:status = 'DISPONIBLE' and p.quantity > p.minimumQuantity)
+              )
             """)
     Page<Product> search(@Param("search") String search,
                           @Param("categoryId") Long categoryId,
+                          @Param("status") String status,
                           Pageable pageable);
 }

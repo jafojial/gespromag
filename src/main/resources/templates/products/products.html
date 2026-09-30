@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Produits</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle">Produits</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2 th:text="${products.totalElements} + ' produit(s)'">0 produit(s)</h2>
+    <a th:href="@{/products/new}" class="btn btn-accent"><i class="fa fa-plus"></i>&nbsp;Nouveau produit</a>
+  </div>
+
+  <form method="get" th:action="@{/products}" class="filter-bar">
+    <input type="text" name="q" class="form-control" placeholder="Rechercher par nom ou SKU" th:value="${q}"/>
+    <select name="categoryId" class="form-control">
+      <option value="">Toutes les categories</option>
+      <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
+              th:selected="${categoryId != null and categoryId == category.id}"></option>
+    </select>
+    <select name="status" class="form-control">
+      <option value="">Tous les statuts</option>
+      <option value="DISPONIBLE" th:selected="${status == 'DISPONIBLE'}">Disponible</option>
+      <option value="STOCK_FAIBLE" th:selected="${status == 'STOCK_FAIBLE'}">Stock faible</option>
+      <option value="RUPTURE" th:selected="${status == 'RUPTURE'}">Rupture</option>
+    </select>
+    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp;Filtrer</button>
+    <a th:href="@{/products}" class="btn btn-default">Reinitialiser</a>
+  </form>
+
+  <div class="card">
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Nom</th>
+        <th>Categorie</th>
+        <th>Prix</th>
+        <th>Stock</th>
+        <th>Seuil min.</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products.content}">
+        <td th:text="${product.sku}"></td>
+        <td><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"></a></td>
+        <td th:text="${product.category.name}"></td>
+        <td th:text="${#numbers.formatDecimal(product.sellingPrice, 0, 'COMMA', 0, 'POINT')} + ' FCFA'"></td>
+        <td th:text="${product.quantity}"></td>
+        <td th:text="${product.minimumQuantity}"></td>
+        <td><span th:replace="~{fragments/status-badge :: stock(${product.stockStatus})}"></span></td>
+        <td class="table-actions">
+          <a th:href="@{/products/{id}(id=${product.id})}" title="Voir"><i class="fa fa-eye"></i></a>
+          <a th:href="@{/products/{id}/edit(id=${product.id})}" title="Modifier"><i class="fa fa-pencil"></i></a>
+          <form sec:authorize="hasAuthority('ROLE_ADMINISTRATEUR')"
+                th:action="@{/products/{id}/delete(id=${product.id})}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="danger js-confirm-action"
+                    th:attr="data-confirm-message='Desactiver le produit ' + ${product.name} + ' ?'" title="Desactiver">
+              <i class="fa fa-trash"></i>
+            </button>
+          </form>
+        </td>
+      </tr>
+      <tr th:if="${products.empty}">
+        <td colspan="8" class="table-empty">Aucun produit ne correspond a ces criteres.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ul class="pagination" th:if="${products.totalPages > 1}">
+    <li th:classappend="${products.first} ? 'disabled'">
+      <a th:href="@{/products(page=${products.number - 1}, q=${q}, categoryId=${categoryId}, status=${status})}">&laquo;</a>
+    </li>
+    <li th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+        th:classappend="${i == products.number} ? 'active'">
+      <a th:href="@{/products(page=${i}, q=${q}, categoryId=${categoryId}, status=${status})}" th:text="${i + 1}"></a>
+    </li>
+    <li th:classappend="${products.last} ? 'disabled'">
+      <a th:href="@{/products(page=${products.number + 1}, q=${q}, categoryId=${categoryId}, status=${status})}">&raquo;</a>
+    </li>
+  </ul>
+
+</div>
+</body>
+</html>

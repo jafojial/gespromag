@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title th:text="${product.name}">Produit</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle" th:text="${product.name}">Produit</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2>
+      SKU : <strong th:text="${product.sku}"></strong>
+      &nbsp;<span th:replace="~{fragments/status-badge :: stock(${product.stockStatus})}"></span>
+      <span class="badge-status" th:unless="${product.active}" style="margin-left:6px;">Inactif</span>
+    </h2>
+    <div>
+      <a th:href="@{/products/{id}/edit(id=${product.id})}" class="btn btn-primary">
+        <i class="fa fa-pencil"></i>&nbsp;Modifier
+      </a>
+      <a th:href="@{/stock/movements/new(productId=${product.id})}" class="btn btn-accent">
+        <i class="fa fa-exchange"></i>&nbsp;Mouvement de stock
+      </a>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-tile">
+      <div class="stat-tile-label">Stock actuel</div>
+      <div class="stat-tile-value" th:text="${product.quantity}">0</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-tile-label">Seuil minimum</div>
+      <div class="stat-tile-value" th:text="${product.minimumQuantity}">0</div>
+    </div>
+    <div class="stat-tile accent">
+      <div class="stat-tile-label">Prix de vente</div>
+      <div class="stat-tile-value" th:text="${#numbers.formatDecimal(product.sellingPrice, 0, 'COMMA', 0, 'POINT')}">0</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-tile-label">Prix d'achat</div>
+      <div class="stat-tile-value" th:text="${#numbers.formatDecimal(product.purchasePrice, 0, 'COMMA', 0, 'POINT')}">0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Categorie</div>
+    <p><a th:href="@{/categories/{id}(id=${product.category.id})}" th:text="${product.category.name}"></a></p>
+    <div class="card-title">Description</div>
+    <p th:if="${product.description}" th:text="${product.description}"></p>
+    <p th:unless="${product.description}" style="color: var(--color-text-muted);">Aucune description.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Derniers mouvements de stock</div>
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Quantite</th>
+        <th>Stock avant</th>
+        <th>Stock apres</th>
+        <th>Utilisateur</th>
+        <th>Commentaire</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="movement : ${movements.content}">
+        <td th:text="${#temporals.format(movement.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+        <td><span th:replace="~{fragments/movement-badge :: movement(${movement.type})}"></span></td>
+        <td th:text="${movement.quantity}"></td>
+        <td th:text="${movement.previousQuantity}"></td>
+        <td th:text="${movement.newQuantity}"></td>
+        <td th:text="${movement.createdBy.username}"></td>
+        <td th:text="${movement.comment}"></td>
+      </tr>
+      <tr th:if="${movements.empty}">
+        <td colspan="7" class="table-empty">Aucun mouvement enregistre pour ce produit.</td>
+      </tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 10px;">
+      <a th:href="@{/stock/movements(productId=${product.id})}">Voir tout l'historique</a>
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
