@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title th:text="${category.name}">Categorie</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle" th:text="${category.name}">Categorie</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2>
+      <span class="badge-status" th:classappend="${category.active} ? 'disponible' : 'inactive'"
+            th:text="${category.active} ? 'Active' : 'Inactive'"></span>
+    </h2>
+    <a th:href="@{/categories/{id}/edit(id=${category.id})}" class="btn btn-primary">
+      <i class="fa fa-pencil"></i>&nbsp;Modifier
+    </a>
+  </div>
+
+  <div class="card" style="max-width: 640px;">
+    <p th:if="${category.description}" th:text="${category.description}"></p>
+    <p th:unless="${category.description}" style="color: var(--color-text-muted);">Aucune description.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Produits de cette categorie (<span th:text="${#lists.size(products)}">0</span>)</div>
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Nom</th>
+        <th>Prix</th>
+        <th>Stock</th>
+        <th>Statut</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products}">
+        <td th:text="${product.sku}"></td>
+        <td><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"></a></td>
+        <td th:text="${#numbers.formatDecimal(product.sellingPrice, 0, 'COMMA', 0, 'POINT')} + ' FCFA'"></td>
+        <td th:text="${product.quantity}"></td>
+        <td><span th:replace="~{fragments/status-badge :: stock(${product.stockStatus})}"></span></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(products)}">
+        <td colspan="5" class="table-empty">Aucun produit actif dans cette categorie.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

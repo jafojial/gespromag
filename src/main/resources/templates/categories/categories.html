@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Categories</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle">Categories</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2 th:text="${categories.totalElements} + ' categorie(s)'">0 categorie(s)</h2>
+    <a th:href="@{/categories/new}" class="btn btn-accent"><i class="fa fa-plus"></i>&nbsp;Nouvelle categorie</a>
+  </div>
+
+  <div class="card">
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="category : ${categories.content}">
+        <td><a th:href="@{/categories/{id}(id=${category.id})}" th:text="${category.name}"></a></td>
+        <td th:text="${category.description}"></td>
+        <td>
+          <span class="badge-status" th:classappend="${category.active} ? 'disponible' : 'inactive'"
+                th:text="${category.active} ? 'Active' : 'Inactive'"></span>
+        </td>
+        <td class="table-actions">
+          <a th:href="@{/categories/{id}(id=${category.id})}" title="Voir"><i class="fa fa-eye"></i></a>
+          <a th:href="@{/categories/{id}/edit(id=${category.id})}" title="Modifier"><i class="fa fa-pencil"></i></a>
+        </td>
+      </tr>
+      <tr th:if="${categories.empty}">
+        <td colspan="4" class="table-empty">Aucune categorie pour le moment.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ul class="pagination" th:if="${categories.totalPages > 1}">
+    <li th:classappend="${categories.first} ? 'disabled'">
+      <a th:href="@{/categories(page=${categories.number - 1})}">&laquo;</a>
+    </li>
+    <li th:each="i : ${#numbers.sequence(0, categories.totalPages - 1)}"
+        th:classappend="${i == categories.number} ? 'active'">
+      <a th:href="@{/categories(page=${i})}" th:text="${i + 1}"></a>
+    </li>
+    <li th:classappend="${categories.last} ? 'disabled'">
+      <a th:href="@{/categories(page=${categories.number + 1})}">&raquo;</a>
+    </li>
+  </ul>
+
+</div>
+</body>
+</html>
