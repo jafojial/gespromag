@@ -35,17 +35,23 @@ public class ProductController {
 
     @GetMapping
     public String list(@RequestParam(required = false) String q,
-                        @RequestParam(required = false) Long categoryId,
+                        @RequestParam(required = false) String categoryId,
                         @RequestParam(required = false) String status,
                         @RequestParam(defaultValue = "0") int page,
                         Model model) {
-        Page<Product> products = productService.search(q, categoryId, status,
+        // Les champs "Toutes les categories" / "Tous les statuts" soumettent une valeur
+        // vide : la traiter comme "aucun filtre" plutot que de la transmettre telle quelle
+        // (une chaine vide ne correspondrait jamais a un statut ni ne se convertirait en Long).
+        Long categoryIdValue = parseCategoryId(categoryId);
+        String statusValue = blankToNull(status);
+
+        Page<Product> products = productService.search(q, categoryIdValue, statusValue,
                 PageRequest.of(page, PAGE_SIZE, Sort.by("name").ascending()));
         model.addAttribute("products", products);
         model.addAttribute("categories", categoryService.listActive());
         model.addAttribute("q", q);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("status", status);
+        model.addAttribute("categoryId", categoryIdValue);
+        model.addAttribute("status", statusValue);
         model.addAttribute("activeMenu", "products");
         return "products/products";
     }
@@ -140,5 +146,20 @@ public class ProductController {
         productService.deactivate(id);
         redirectAttributes.addFlashAttribute("successMessage", "Produit desactive avec succes.");
         return "redirect:/products";
+    }
+
+    private static String blankToNull(String value) {
+        return (value == null || value.isBlank()) ? null : value;
+    }
+
+    private static Long parseCategoryId(String categoryId) {
+        if (categoryId == null || categoryId.isBlank()) {
+            return null;
+        }
+        try {
+            return Long.valueOf(categoryId);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

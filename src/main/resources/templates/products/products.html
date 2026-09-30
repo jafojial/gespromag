@@ -17,20 +17,22 @@
   </div>
 
   <form method="get" th:action="@{/products}" class="filter-bar">
-    <input type="text" name="q" class="form-control" placeholder="Rechercher par nom ou SKU" th:value="${q}"/>
-    <select name="categoryId" class="form-control">
+    <input type="text" name="q" class="form-control filter-field" placeholder="Rechercher par nom ou SKU" th:value="${q}"/>
+    <select name="categoryId" class="form-control filter-select">
       <option value="">Toutes les categories</option>
       <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
               th:selected="${categoryId != null and categoryId == category.id}"></option>
     </select>
-    <select name="status" class="form-control">
+    <select name="status" class="form-control filter-select">
       <option value="">Tous les statuts</option>
       <option value="DISPONIBLE" th:selected="${status == 'DISPONIBLE'}">Disponible</option>
       <option value="STOCK_FAIBLE" th:selected="${status == 'STOCK_FAIBLE'}">Stock faible</option>
       <option value="RUPTURE" th:selected="${status == 'RUPTURE'}">Rupture</option>
     </select>
-    <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp;Filtrer</button>
-    <a th:href="@{/products}" class="btn btn-default">Reinitialiser</a>
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>&nbsp;Filtrer</button>
+      <a th:href="@{/products}" class="btn btn-default">Reinitialiser</a>
+    </div>
   </form>
 
   <div class="card">

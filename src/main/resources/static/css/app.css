@@ -234,6 +234,7 @@ a {
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
   margin-bottom: 16px;
 }
@@ -241,10 +242,44 @@ a {
 .filter-bar .form-control,
 .filter-bar select {
   height: 38px;
+  width: auto;
 }
 
-.filter-bar input[name="q"] {
-  min-width: 220px;
+/* Bootstrap's .form-control is width:100%, which — as a flex item — resolves its
+   flex-basis to 100% and forces every field onto its own line. Give each field an
+   explicit basis so they share one row on wide screens. */
+.filter-bar .filter-field {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.filter-bar .filter-select {
+  flex: 0 1 190px;
+  min-width: 160px;
+}
+
+.filter-bar .filter-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.filter-bar .filter-actions .btn {
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .filter-bar .filter-field,
+  .filter-bar .filter-select,
+  .filter-bar .filter-actions {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+
+  .filter-bar .filter-actions .btn {
+    flex: 1 1 auto;
+  }
 }
 
 /* ---------- Tables ---------- */
