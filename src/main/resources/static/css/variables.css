@@ -1,0 +1,33 @@
+/* Charte graphique GesProMag — adaptee de la palette du site LMT Group
+   (https://lmtgroup.com/) : bleu marine institutionnel en couleur dominante,
+   orange en couleur d'accent/action. */
+:root {
+  --color-primary: #0E245B;
+  --color-primary-dark: #081633;
+  --color-primary-light: #1A3A7A;
+  --color-primary-soft: #E7EBF3;
+
+  --color-accent: #F36B25;
+  --color-accent-dark: #D4551A;
+  --color-accent-soft: #FDE9DD;
+
+  --color-white: #FFFFFF;
+  --color-bg: #F4F6FA;
+  --color-bg-subtle: #F8F9FB;
+  --color-border: #DFE3EA;
+  --color-border-light: #EEF1F6;
+
+  --color-text: #1F2937;
+  --color-text-muted: #6B7280;
+  --color-text-inverse: #FFFFFF;
+
+  --color-success: #1F9D55;
+  --color-success-bg: #E6F6EC;
+  --color-warning: #F5A623;
+  --color-warning-bg: #FDF3DD;
+  --color-danger: #D64545;
+  --color-danger-bg: #FBE9E9;
+
+  --shadow-card: 0 2px 10px rgba(14, 36, 91, 0.08);
+  --radius: 6px;
+}

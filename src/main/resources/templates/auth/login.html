@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Connexion | GesProMag</title>
+  <meta name="robots" content="noindex, nofollow"/>
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+  <link th:href="@{/css/variables.css}" rel="stylesheet">
+  <link th:href="@{/css/auth.css}" rel="stylesheet">
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <a th:href="@{/login}" class="auth-logo">GesPro<span>Mag</span></a>
+    </div>
+    <div class="auth-card-body">
+      <h1 class="auth-title">Connexion</h1>
+      <p class="auth-subtitle">Gestion des produits et du stock du magasin</p>
+
+      <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        <i class="fa fa-exclamation-circle"></i>&nbsp;Identifiant ou mot de passe incorrect.
+      </div>
+      <div th:if="${param.logout}" class="alert alert-info" role="alert">
+        <i class="fa fa-check-circle"></i>&nbsp;Vous avez ete deconnecte.
+      </div>
+
+      <form th:action="@{/login}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <div class="field-group">
+          <i class="fa fa-user field-icon"></i>
+          <input type="text" class="form-control" name="username"
+                 placeholder="Email ou nom d'utilisateur" required autofocus/>
+        </div>
+        <div class="field-group">
+          <i class="fa fa-lock field-icon"></i>
+          <input type="password" id="login-pwd" class="form-control" name="password"
+                 placeholder="Mot de passe" required/>
+          <button type="button" class="pwd-toggle" onclick="togglePwd()" tabindex="-1">
+            <i id="login-pwd-eye" class="fa fa-eye"></i>
+          </button>
+        </div>
+        <button type="submit" class="btn-auth">
+          <i class="fa fa-sign-in"></i>&nbsp;Se connecter
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <p class="auth-copy">
+    &copy;&nbsp;<span th:text="${#temporals.year(#temporals.createNow())}">2026</span>&nbsp;GesProMag
+  </p>
+
+  <script>
+    function togglePwd() {
+      var input = document.getElementById('login-pwd');
+      var eye = document.getElementById('login-pwd-eye');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.className = 'fa fa-eye-slash';
+      } else {
+        input.type = 'password';
+        eye.className = 'fa fa-eye';
+      }
+    }
+  </script>
+</body>
+</html>
