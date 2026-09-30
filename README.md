@@ -164,3 +164,4 @@ Règles de gestion notables :
 - un mouvement qui ferait passer le stock sous zéro est refusé ;
 - une catégorie contenant encore des produits actifs ne peut pas être désactivée ;
 - la suppression d'un produit est une désactivation logique (le produit et son historique de mouvements sont conservés).
+
