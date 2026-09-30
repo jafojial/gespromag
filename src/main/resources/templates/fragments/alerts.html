@@ -1,0 +1,8 @@
+<div xmlns:th="http://www.thymeleaf.org" th:fragment="alerts">
+  <div th:if="${successMessage}" class="alert alert-success">
+    <i class="fa fa-check-circle"></i>&nbsp;<span th:text="${successMessage}"></span>
+  </div>
+  <div th:if="${errorMessage}" class="alert alert-danger">
+    <i class="fa fa-exclamation-circle"></i>&nbsp;<span th:text="${errorMessage}"></span>
+  </div>
+</div>

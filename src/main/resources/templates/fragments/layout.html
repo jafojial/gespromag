@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title layout:title-pattern="$CONTENT_TITLE · GesProMag">GesProMag</title>
+  <meta name="robots" content="noindex, nofollow"/>
+
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+  <link th:href="@{/css/variables.css}" rel="stylesheet">
+  <link th:href="@{/css/app.css}" rel="stylesheet">
+  <th:block layout:fragment="head"></th:block>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="app-shell">
+
+    <aside class="sidebar" id="sidebar">
+      <a th:href="@{/dashboard}" class="sidebar-brand">GesPro<span>Mag</span></a>
+      <div th:replace="~{fragments/sidebar :: menu}"></div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <button type="button" class="topbar-toggle" id="menuToggle" aria-label="Ouvrir le menu">
+          <i class="fa fa-bars"></i>
+        </button>
+        <h1 class="topbar-title" layout:fragment="pageTitle">GesProMag</h1>
+        <div class="topbar-user">
+          <span class="topbar-user-name">
+            <i class="fa fa-user-circle"></i>
+            <span sec:authentication="name">utilisateur</span>
+            <span class="topbar-user-role" sec:authorize="hasAuthority('ROLE_ADMINISTRATEUR')">Administrateur</span>
+            <span class="topbar-user-role" sec:authorize="hasAuthority('ROLE_GESTIONNAIRE')">Gestionnaire</span>
+          </span>
+          <form th:action="@{/logout}" method="post" class="topbar-logout-form">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="topbar-logout" title="Deconnexion">
+              <i class="fa fa-sign-out"></i>
+            </button>
+          </form>
+        </div>
+      </header>
+
+      <main class="content">
+        <div th:replace="~{fragments/alerts :: alerts}"></div>
+        <div layout:fragment="content"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modale de confirmation partagee (voir .js-confirm-action dans app.js) -->
+  <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"><i class="fa fa-exclamation-triangle"></i>&nbsp;Confirmation</h4>
+        </div>
+        <div class="modal-body">
+          <p id="confirmModalMessage"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+          <button type="button" class="btn btn-danger" id="confirmModalBtn">Confirmer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script th:src="@{/js/jquery.min.js}"></script>
+  <script th:src="@{/js/bootstrap.min.js}"></script>
+  <script th:src="@{/js/app.js}"></script>
+  <th:block layout:fragment="scripts"></th:block>
+</body>
+</html>
