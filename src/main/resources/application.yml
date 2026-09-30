@@ -12,7 +12,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    open-in-view: false
+    # Active deliberement : les templates Thymeleaf accedent a des associations paresseuses
+    # (product.category, movement.createdBy, ...) pendant le rendu de la vue.
+    open-in-view: true
     properties:
       hibernate:
         format_sql: true
