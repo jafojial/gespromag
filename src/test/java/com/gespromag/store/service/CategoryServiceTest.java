@@ -35,7 +35,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void create_refuseUnNomDejaUtilise() {
+    void createRefuseUnNomDejaUtilise() {
         CategoryCreateDto dto = new CategoryCreateDto();
         dto.setName("Boissons");
         when(categoryRepository.existsByNameIgnoreCase("Boissons")).thenReturn(true);
@@ -48,7 +48,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void create_creeUneCategorieActive() {
+    void createCreeUneCategorieActive() {
         CategoryCreateDto dto = new CategoryCreateDto();
         dto.setName("Boissons");
         dto.setDescription("Rafraichissements");
@@ -62,7 +62,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void update_refuseLaDesactivationSiDesProduitsActifsExistent() {
+    void updateRefuseLaDesactivationSiDesProduitsActifsExistent() {
         Category category = new Category();
         category.setId(1L);
         category.setName("Boissons");
@@ -83,7 +83,7 @@ class CategoryServiceTest {
     }
 
     @Test
-    void update_autoriseLaDesactivationSansProduitsActifs() {
+    void updateAutoriseLaDesactivationSansProduitsActifs() {
         Category category = new Category();
         category.setId(1L);
         category.setName("Boissons");

@@ -45,7 +45,7 @@ class StockMovementServiceTest {
     }
 
     @Test
-    void entree_augmenteLeStockDuMontantIndique() {
+    void entreeAugmenteLeStockDuMontantIndique() {
         when(stockMovementRepository.save(any(StockMovement.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -58,7 +58,7 @@ class StockMovementServiceTest {
     }
 
     @Test
-    void sortie_diminueLeStockDuMontantIndique() {
+    void sortieDiminueLeStockDuMontantIndique() {
         when(stockMovementRepository.save(any(StockMovement.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -70,7 +70,7 @@ class StockMovementServiceTest {
     }
 
     @Test
-    void sortie_refuseSiLeStockDeviendraitNegatif() {
+    void sortieRefuseSiLeStockDeviendraitNegatif() {
         assertThatThrownBy(() -> stockMovementService.record(product, MovementType.SORTIE, 100, null, user))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("dessous de zero");
@@ -80,7 +80,7 @@ class StockMovementServiceTest {
     }
 
     @Test
-    void ajustement_fixeLaQuantiteAbsolue() {
+    void ajustementFixeLaQuantiteAbsolue() {
         when(stockMovementRepository.save(any(StockMovement.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
         ArgumentCaptor<StockMovement> captor = ArgumentCaptor.forClass(StockMovement.class);

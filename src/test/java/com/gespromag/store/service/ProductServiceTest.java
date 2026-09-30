@@ -62,7 +62,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void create_refuseUnSkuDejaUtilise() {
+    void createRefuseUnSkuDejaUtilise() {
         when(productRepository.existsBySkuIgnoreCase("COCA-33")).thenReturn(true);
 
         assertThatThrownBy(() -> productService.create(validCreateDto(), user))
@@ -84,7 +84,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void create_enregistreUnMouvementInitialSiQuantitePositive() {
+    void createEnregistreUnMouvementInitialSiQuantitePositive() {
         when(productRepository.existsBySkuIgnoreCase("COCA-33")).thenReturn(false);
         when(categoryService.getById(1L)).thenReturn(activeCategory);
         when(productRepository.save(any(Product.class))).thenAnswer(invocation -> {
@@ -99,7 +99,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void create_nEnregistrePasDeMouvementSiQuantiteInitialeNulle() {
+    void createNenregistrePasDeMouvementSiQuantiteInitialeNulle() {
         ProductCreateDto dto = validCreateDto();
         dto.setQuantity(0);
         when(productRepository.existsBySkuIgnoreCase("COCA-33")).thenReturn(false);
@@ -112,7 +112,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void update_refuseUnSkuUtiliseParUnAutreProduit() {
+    void updateRefuseUnSkuUtiliseParUnAutreProduit() {
         Product existing = new Product();
         existing.setId(5L);
         existing.setCategory(activeCategory);
