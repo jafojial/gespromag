@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Alertes de stock</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle">Alertes de stock</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2 th:text="${#lists.size(products)} + ' produit(s) a reapprovisionner'">0 produit(s)</h2>
+    <a th:href="@{/stock/movements}" class="btn btn-primary"><i class="fa fa-history"></i>&nbsp;Historique des mouvements</a>
+  </div>
+
+  <div class="card">
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Nom</th>
+        <th>Categorie</th>
+        <th>Stock</th>
+        <th>Seuil min.</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products}">
+        <td th:text="${product.sku}"></td>
+        <td><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"></a></td>
+        <td th:text="${product.category.name}"></td>
+        <td th:text="${product.quantity}"></td>
+        <td th:text="${product.minimumQuantity}"></td>
+        <td><span th:replace="~{fragments/status-badge :: stock(${product.stockStatus})}"></span></td>
+        <td class="table-actions">
+          <a th:href="@{/stock/movements/new(productId=${product.id})}" title="Enregistrer un mouvement">
+            <i class="fa fa-exchange"></i>
+          </a>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(products)}">
+        <td colspan="7" class="table-empty">Aucun produit ne necessite de reapprovisionnement.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

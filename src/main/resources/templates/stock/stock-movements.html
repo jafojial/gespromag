@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+  <title>Mouvements de stock</title>
+</head>
+<body>
+<th:block layout:fragment="pageTitle">Mouvements de stock</th:block>
+
+<div layout:fragment="content">
+
+  <div class="page-header">
+    <h2 th:if="${product}">Historique de <span th:text="${product.name}"></span></h2>
+    <h2 th:unless="${product}">Tous les mouvements</h2>
+    <div>
+      <a th:if="${product}" th:href="@{/stock/movements}" class="btn btn-default">Voir tous les produits</a>
+      <a th:href="@{/stock/movements/new(productId=${productId})}" class="btn btn-accent">
+        <i class="fa fa-plus"></i>&nbsp;Nouveau mouvement
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <table class="table-app">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th th:unless="${product}">Produit</th>
+        <th>Type</th>
+        <th>Quantite</th>
+        <th>Stock avant</th>
+        <th>Stock apres</th>
+        <th>Utilisateur</th>
+        <th>Commentaire</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="movement : ${movements.content}">
+        <td th:text="${#temporals.format(movement.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+        <td th:unless="${product}">
+          <a th:href="@{/products/{id}(id=${movement.product.id})}" th:text="${movement.product.name}"></a>
+        </td>
+        <td><span th:replace="~{fragments/movement-badge :: movement(${movement.type})}"></span></td>
+        <td th:text="${movement.quantity}"></td>
+        <td th:text="${movement.previousQuantity}"></td>
+        <td th:text="${movement.newQuantity}"></td>
+        <td th:text="${movement.createdBy.username}"></td>
+        <td th:text="${movement.comment}"></td>
+      </tr>
+      <tr th:if="${movements.empty}">
+        <td colspan="8" class="table-empty">Aucun mouvement enregistre.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ul class="pagination" th:if="${movements.totalPages > 1}">
+    <li th:classappend="${movements.first} ? 'disabled'">
+      <a th:href="@{/stock/movements(page=${movements.number - 1}, productId=${productId})}">&laquo;</a>
+    </li>
+    <li th:each="i : ${#numbers.sequence(0, movements.totalPages - 1)}"
+        th:classappend="${i == movements.number} ? 'active'">
+      <a th:href="@{/stock/movements(page=${i}, productId=${productId})}" th:text="${i + 1}"></a>
+    </li>
+    <li th:classappend="${movements.last} ? 'disabled'">
+      <a th:href="@{/stock/movements(page=${movements.number + 1}, productId=${productId})}">&raquo;</a>
+    </li>
+  </ul>
+
+</div>
+</body>
+</html>

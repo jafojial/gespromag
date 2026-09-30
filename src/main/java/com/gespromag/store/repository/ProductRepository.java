@@ -32,6 +32,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByCategoryIdAndActiveTrueOrderByNameAsc(Long categoryId);
 
+    List<Product> findAllByActiveTrueOrderByNameAsc();
+
+    @Query("""
+            select p from Product p
+            where p.active = true and (p.quantity = 0 or p.quantity <= p.minimumQuantity)
+            order by p.quantity asc, p.name asc
+            """)
+    List<Product> findNeedingRestock();
+
     boolean existsByCategoryIdAndActiveTrue(Long categoryId);
 
     @Query("""
